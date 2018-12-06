@@ -10,7 +10,7 @@ RUN [ "cross-build-start" ]
 
 RUN apt-get update && apt-get install -y \
 	nano \
-	zip \
+	zip unzip php7.0-zip \
 	wget \
 	curl \
 	imagemagick \
