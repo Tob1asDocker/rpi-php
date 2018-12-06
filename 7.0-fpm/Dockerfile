@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install -y \
 	#php-xdebug \
 	php7.0-intl \
 	#php7.0-xmlrpc \
+	php7.0-xml \
 	php-pear \
 	php-geoip \
 	php7.0-opcache \
