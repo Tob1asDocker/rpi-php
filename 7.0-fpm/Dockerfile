@@ -10,7 +10,7 @@ RUN [ "cross-build-start" ]
 
 RUN apt-get update && apt-get install -y \
 	nano \
-	zip unzip php7.0-zip \
+	zip unzip \
 	wget \
 	curl \
 	imagemagick \
@@ -39,6 +39,7 @@ RUN apt-get update && apt-get install -y \
 	php-geoip \
 	php7.0-opcache \
 	php-gettext \
+	php7.0-zip \
 	--no-install-recommends && \
 	rm -rf /var/lib/apt/lists/* && \
 	mkdir -p /var/www/html && chown -R www-data:www-data /var/www
