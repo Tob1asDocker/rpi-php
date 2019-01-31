@@ -1,4 +1,4 @@
-FROM resin/rpi-raspbian:jessie
+FROM balenalib/rpi-raspbian:jessie
 
 MAINTAINER Tobias Hargesheimer <docker@ison.ws>
 
