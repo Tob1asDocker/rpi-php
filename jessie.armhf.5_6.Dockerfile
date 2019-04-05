@@ -1,12 +1,20 @@
 FROM balenalib/rpi-raspbian:jessie
 
-MAINTAINER Tobias Hargesheimer <docker@ison.ws>
+LABEL org.opencontainers.image.authors="Tobias Hargesheimer <docker@ison.ws>" \
+	org.opencontainers.image.title="PHP" \
+	org.opencontainers.image.description="Debian 8 Jessie with PHP 5.6 on arm arch" \
+	org.opencontainers.image.licenses="Apache-2.0" \
+	org.opencontainers.image.url="https://hub.docker.com/r/tobi312/rpi-php" \
+	org.opencontainers.image.source="https://github.com/Tob1asDocker/rpi-php"
+
+ARG CROSS_BUILD_START=":"
+ARG CROSS_BUILD_END=":"
+
+RUN [ ${CROSS_BUILD_START} ]
 
 ENV LANG C.UTF-8
 ENV TZ Europe/Berlin
-#ENV TERM xterm # export TERM=xterm because Error opening terminal: unknown.
-
-RUN [ "cross-build-start" ]
+ENV TERM xterm
 
 RUN apt-get update && apt-get install -y \
 	nano \
@@ -48,13 +56,13 @@ RUN sed -i -e 's/error_log = \/var\/log\/php5-fpm.log/error_log = \/proc\/self\/
 	sed -i -e 's/;clear_env = no/clear_env = no/g' /etc/php5/fpm/pool.d/www.conf && \
 	sed -i -e 's/listen = \/var\/run\/php5-fpm.sock/listen = [::]:9000/g' /etc/php5/fpm/pool.d/www.conf
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-RUN [ "cross-build-end" ]	
+COPY entrypoint-jessie-5_6.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh	
 
 VOLUME /var/www/html /etc/php5/fpm/pool.d/ /var/lib/php5/sessions
 EXPOSE 9000
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php5-fpm"]
+
+RUN [ ${CROSS_BUILD_END} ]

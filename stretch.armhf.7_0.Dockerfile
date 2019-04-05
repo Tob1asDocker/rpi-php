@@ -1,12 +1,20 @@
 FROM balenalib/rpi-raspbian:stretch
 
-MAINTAINER Tobias Hargesheimer <docker@ison.ws>
+LABEL org.opencontainers.image.authors="Tobias Hargesheimer <docker@ison.ws>" \
+	org.opencontainers.image.title="PHP" \
+	org.opencontainers.image.description="Debian 9 Stretch with PHP 7.0 on arm arch" \
+	org.opencontainers.image.licenses="Apache-2.0" \
+	org.opencontainers.image.url="https://hub.docker.com/r/tobi312/rpi-php" \
+	org.opencontainers.image.source="https://github.com/Tob1asDocker/rpi-php"
+
+ARG CROSS_BUILD_START=":"
+ARG CROSS_BUILD_END=":"
+
+RUN [ ${CROSS_BUILD_START} ]
 
 ENV LANG C.UTF-8
 ENV TZ Europe/Berlin
-#ENV TERM xterm # export TERM=xterm because Error opening terminal: unknown.
-
-RUN [ "cross-build-start" ]
+ENV TERM xterm
 
 RUN apt-get update && apt-get install -y \
 	nano \
@@ -52,13 +60,13 @@ RUN sed -i -e 's/error_log = \/var\/log\/php7.0-fpm.log/error_log = \/proc\/self
 	sed -i -e 's/listen = \/run\/php\/php7.0-fpm.sock/listen = [::]:9000/g' /etc/php/7.0/fpm/pool.d/www.conf && \
 	mkdir -p /run/php
 
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint-stretch-7_0.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
-RUN [ "cross-build-end" ]	
 
 VOLUME /var/www/html /etc/php/7.0/fpm/pool.d/ /var/lib/php/sessions
 EXPOSE 9000
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm7.0"]
+
+RUN [ ${CROSS_BUILD_END} ]
